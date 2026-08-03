@@ -119,12 +119,9 @@ ul { padding: 0; margin: 0; list-style: none; }
 .brand-mark {
   width: 34px;
   height: 34px;
-  display: grid;
-  place-items: center;
   border-radius: 9px;
-  background: var(--gradient);
-  color: #050608;
-  font-weight: 700;
+  display: block;
+  object-fit: cover;
 }
 .main-nav {
   display: flex;
