@@ -1,5 +1,17 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// Mouse-follow gradient on hero
+const hero = document.querySelector(".hero");
+if (hero) {
+  hero.addEventListener("mousemove", (e) => {
+    const rect = hero.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    hero.style.setProperty("--mouse-x", x + "%");
+    hero.style.setProperty("--mouse-y", y + "%");
+  });
+}
+
 const navToggle = document.getElementById("nav-toggle");
 const mainNav = document.getElementById("main-nav");
 
