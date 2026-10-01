@@ -156,6 +156,23 @@ ul { padding: 0; margin: 0; list-style: none; }
   padding: 130px 0 90px;
   overflow: hidden;
 }
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.04;
+  background-image:
+    linear-gradient(rgba(124,92,255,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,92,255,0.3) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 70%);
+  animation: grid-drift 20s linear infinite;
+}
+@keyframes grid-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-60px); }
+}
 .hero-glow {
   position: absolute;
   top: -220px;
@@ -163,9 +180,10 @@ ul { padding: 0; margin: 0; list-style: none; }
   transform: translateX(-50%);
   width: 900px;
   height: 700px;
-  background: radial-gradient(circle at center, rgba(124,92,255,0.35), rgba(34,211,238,0.12) 45%, transparent 70%);
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(124,92,255,0.35), rgba(34,211,238,0.12) 45%, transparent 70%);
   filter: blur(40px);
   z-index: 0;
+  transition: background .15s ease;
 }
 .hero-inner { position: relative; z-index: 2; text-align: center; }
 .eyebrow {
@@ -184,6 +202,11 @@ ul { padding: 0; margin: 0; list-style: none; }
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--accent-2);
   box-shadow: 0 0 10px var(--accent-2);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 .hero h1 {
   font-size: clamp(2.4rem, 5.5vw, 4.2rem);
@@ -258,7 +281,7 @@ ul { padding: 0; margin: 0; list-style: none; }
 }
 .section-head h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
 
-/* ---------- Product card ---------- */
+/* ---------- Product cards ---------- */
 .product-card {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
@@ -269,6 +292,11 @@ ul { padding: 0; margin: 0; list-style: none; }
   border-radius: 24px;
   padding: 48px;
 }
+.product-card + .product-card { margin-top: 40px; }
+.product-card-erp {
+  direction: rtl;
+}
+.product-card-erp > * { direction: ltr; }
 .product-badge {
   display: inline-block;
   font-size: 0.78rem;
@@ -280,6 +308,9 @@ ul { padding: 0; margin: 0; list-style: none; }
   padding: 6px 12px;
   border-radius: 999px;
   margin-bottom: 16px;
+}
+.product-badge-erp {
+  background: linear-gradient(120deg, #ff6b9d, #f59e0b);
 }
 .product-info h3 { font-size: 2rem; margin-bottom: 12px; }
 .product-features { margin: 20px 0 28px; display: flex; flex-direction: column; gap: 10px; }
@@ -317,6 +348,10 @@ ul { padding: 0; margin: 0; list-style: none; }
 .mock-line { height: 12px; border-radius: 6px; background: #232838; margin-bottom: 12px; }
 .mock-line.w-60 { width: 60%; }
 .mock-line.w-40 { width: 40%; background: #1b2030; margin-bottom: 24px; }
+.mock-line.w-80 { width: 80%; }
+.mock-line.w-90 { width: 90%; }
+.mock-line.w-70 { width: 70%; }
+.mock-line.w-100 { width: 100%; }
 .mock-chart {
   display: flex;
   align-items: flex-end;
@@ -330,6 +365,80 @@ ul { padding: 0; margin: 0; list-style: none; }
   background: linear-gradient(180deg, #7c5cff, #22d3ee);
   opacity: 0.85;
 }
+
+/* ---------- ERP mockup ---------- */
+.mock-erp-window { border-radius: 14px; }
+.mock-erp-body {
+  display: flex;
+  height: 260px;
+}
+.mock-sidebar {
+  width: 48px;
+  background: #0e1019;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 18px;
+}
+.mock-sidebar-item {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: #232838;
+}
+.mock-sidebar-item:nth-child(1) { background: linear-gradient(135deg, #7c5cff, #22d3ee); }
+.mock-sidebar-item:nth-child(3) { background: #1e293b; }
+.mock-sidebar-item:nth-child(5) { background: #1e293b; }
+.mock-dashboard {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.mock-dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mock-dash-header .mock-line { margin-bottom: 0; }
+.mock-dash-actions { display: flex; gap: 8px; }
+.mock-dash-actions span {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #232838;
+  display: block;
+}
+.mock-dash-cards {
+  display: flex;
+  gap: 12px;
+}
+.mock-dash-card {
+  flex: 1;
+  height: 60px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(124,92,255,0.2), rgba(34,211,238,0.1));
+  border: 1px solid var(--border);
+}
+.mock-dash-card:nth-child(2) { background: linear-gradient(135deg, rgba(34,211,238,0.2), rgba(255,107,157,0.1)); }
+.mock-dash-card:nth-child(3) { background: linear-gradient(135deg, rgba(255,107,157,0.2), rgba(124,92,255,0.1)); }
+.mock-dash-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.mock-dash-table .mock-line { margin-bottom: 0; }
+.mock-dash-table .mock-line:nth-child(1) { width: 100%; }
+.mock-dash-table .mock-line:nth-child(2) { width: 82%; }
+.mock-dash-table .mock-line:nth-child(3) { width: 74%; }
+.mock-dash-table .mock-line:nth-child(4) { width: 66%; }
 
 /* ---------- Feature grid ---------- */
 .grid { display: grid; gap: 24px; }
@@ -446,6 +555,7 @@ ul { padding: 0; margin: 0; list-style: none; }
   .nav-toggle { display: flex; }
   .grid-3 { grid-template-columns: 1fr; }
   .product-card { grid-template-columns: 1fr; }
+  .product-card-erp { direction: ltr; }
   .about-inner { grid-template-columns: 1fr; }
   .hero-stats { gap: 32px; }
 }
