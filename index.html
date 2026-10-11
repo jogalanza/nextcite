@@ -12,9 +12,49 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css" />
+
+<!--
+  CINEMATIC UPGRADE — techniques applied (epic-design 2.5D catalogue)
+  Hero      : 6-layer depth parallax · pinned-sticky scrub · split-converge headline ·
+              bleed typography (ghost "NEXTCITE") · AI-core orbit · floating companion chips ·
+              foreground particles · elastic core drop
+  Trust     : scroll-speed reactive marquee
+  Products  : scrub perspective reveals · product mockups as depth-3 objects · animated data bars
+  Services  : stagger + clip-path birth reveal · pointer 3D tilt
+  Process   : scrubbed progress spine · sequential word/step scroll-lighting
+  About     : masked curtain line reveal · layered parallax
+  CTA       : window-pane iris expand
+  Global    : scroll progress bar · cursor-reactive glow · section peel
+  Guardrails: prefers-reduced-motion · pointer:coarse lite mode · GSAP-with-fallback (works with JS off)
+-->
+<script>
+  // Marks that JS is available so enter-states can safely start hidden (no-JS keeps content visible).
+  document.documentElement.classList.add("js");
+</script>
+
+<!-- GSAP (deferred, in order). The site degrades gracefully if these fail to load. -->
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+<style>
+  /* Critical: reduced-motion + no-JS safety, before the stylesheet paints. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  html:not(.js) .reveal,
+  html:not(.js) [data-animate] { opacity: 1 !important; transform: none !important; }
+</style>
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="scroll-progress" aria-hidden="true"><span></span></div>
 <div class="noise-overlay" aria-hidden="true"></div>
 
 <header class="site-header" id="top">
@@ -37,289 +77,376 @@
   </div>
 </header>
 
-<main>
+<main id="main-content">
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-grid" aria-hidden="true"></div>
-    <div class="hero-glow" aria-hidden="true"></div>
-    <div class="container hero-inner">
-      <div class="eyebrow reveal">
-        <span class="dot"></span> AI-native software studio
+  <!-- ============ HERO ============ -->
+  <section class="scene hero-scene" data-scene="hero" style="--scene-height: 185vh">
+    <div class="hero-sticky">
+
+      <div class="layer depth-0" data-depth="0" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="scene-vignette"></div>
       </div>
-      <h1 class="reveal">
-        Ship enterprise software <span class="gradient-text">at the speed of AI.</span>
-      </h1>
-      <p class="hero-sub reveal">
-        Nextcite pairs senior engineering with AI coding tools to design, build, and ship
-        production-grade software — from personal finance apps to full-scale ERP platforms.
-      </p>
-      <div class="hero-actions reveal">
-        <a href="#contact" class="btn btn-primary">Start a project</a>
-        <a href="#erp" class="btn btn-ghost">Explore DynamicApp ERP</a>
+
+      <div class="layer depth-1" data-depth="1" aria-hidden="true">
+        <div class="hero-glow"></div>
+        <div class="glow-blob glow-a"></div>
+        <div class="glow-blob glow-b"></div>
       </div>
-      <div class="hero-stats reveal">
-        <div class="stat">
-          <span class="stat-num">10x</span>
-          <span class="stat-label">faster prototyping</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">100%</span>
-          <span class="stat-label">human-reviewed code</span>
-        </div>
-        <div class="stat">
-          <span class="stat-num">24/7</span>
-          <span class="stat-label">shipping cadence</span>
+
+      <div class="layer depth-2" data-depth="2" aria-hidden="true">
+        <div class="bleed-title">NEXTCITE</div>
+        <div class="chip chip-tl float-loop"><span class="chip-dot"></span> CI/CD passing</div>
+        <div class="chip chip-tr float-loop"><span class="chip-dot chip-dot-alt"></span> Human-reviewed</div>
+        <div class="chip chip-bl float-loop"><span class="chip-dot chip-dot-pink"></span> Multi-tenant</div>
+        <div class="chip chip-br float-loop"><span class="chip-dot"></span> AI automation</div>
+      </div>
+
+      <div class="layer depth-3" data-depth="3" aria-hidden="true">
+        <div class="ai-core" id="ai-core">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-3"></span>
+          <span class="core-glow"></span>
+          <span class="core-mark">N</span>
         </div>
       </div>
+
+      <div class="layer depth-4" data-depth="4">
+        <div class="container hero-inner">
+          <div class="eyebrow">
+            <span class="dot"></span> AI-native software studio
+          </div>
+          <h1 class="hero-title anim-text" data-animate="converge"
+              aria-label="Ship enterprise software at the speed of AI.">
+            <span class="title-line">
+              <span class="word word-left">Ship</span>
+              <span class="word word-left">enterprise</span>
+              <span class="word word-left">software</span>
+            </span>
+            <span class="title-line">
+              <span class="word word-right">at</span>
+              <span class="word word-right">the</span>
+              <span class="word word-right">speed</span>
+              <span class="word word-right gradient-text">of&nbsp;AI.</span>
+            </span>
+          </h1>
+          <p class="hero-sub">
+            Nextcite pairs senior engineering with AI coding tools to design, build, and ship
+            production-grade software — from personal finance apps to full-scale ERP platforms.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Start a project</a>
+            <a href="#erp" class="btn btn-ghost">Explore DynamicApp ERP</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num">10x</span>
+              <span class="stat-label">faster prototyping</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">100%</span>
+              <span class="stat-label">human-reviewed code</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num">24/7</span>
+              <span class="stat-label">shipping cadence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer depth-5" data-depth="5" aria-hidden="true">
+        <span class="particle p1 float-loop"></span>
+        <span class="particle p2 float-loop"></span>
+        <span class="particle p3 float-loop"></span>
+        <span class="particle p4 float-loop"></span>
+        <span class="particle p5 float-loop"></span>
+        <span class="particle p6 float-loop"></span>
+      </div>
+
     </div>
   </section>
 
-  <!-- TRUST STRIP -->
+  <!-- ============ TRUST STRIP (reactive marquee) ============ -->
   <section class="trust-strip">
     <div class="container">
-      <p class="trust-label">Engineering workflows powered by</p>
-      <div class="trust-logos">
-        <span>AI Pair Programming</span>
-        <span>Automated CI/CD</span>
-        <span>Cloud &amp; On-Prem Infrastructure</span>
-        <span>Containerized Deployments</span>
-        <span>Infrastructure as Code</span>
-        <span>Plugin Architecture</span>
+      <p class="trust-label reveal">Engineering workflows powered by</p>
+    </div>
+    <div class="marquee" aria-label="Capabilities">
+      <div class="marquee-track">
+        <span class="marquee-item">AI Pair Programming</span>
+        <span class="marquee-item">Automated CI/CD</span>
+        <span class="marquee-item">Cloud &amp; On-Prem Infrastructure</span>
+        <span class="marquee-item">Containerized Deployments</span>
+        <span class="marquee-item">Infrastructure as Code</span>
+        <span class="marquee-item">Plugin Architecture</span>
+        <!-- duplicate set for a seamless loop -->
+        <span class="marquee-item" aria-hidden="true">AI Pair Programming</span>
+        <span class="marquee-item" aria-hidden="true">Automated CI/CD</span>
+        <span class="marquee-item" aria-hidden="true">Cloud &amp; On-Prem Infrastructure</span>
+        <span class="marquee-item" aria-hidden="true">Containerized Deployments</span>
+        <span class="marquee-item" aria-hidden="true">Infrastructure as Code</span>
+        <span class="marquee-item" aria-hidden="true">Plugin Architecture</span>
       </div>
     </div>
   </section>
 
-  <!-- PRODUCTS -->
-  <section id="products" class="section">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-tag">Products</span>
-        <h2>Software we build for ourselves — and for you</h2>
-        <p>Every Nextcite product is a proof point: real tools, built with the same AI-assisted
-          workflow we bring to client engagements.</p>
-      </div>
-
-      <!-- Spender -->
-      <div class="product-card reveal">
-        <div class="product-info">
-          <span class="product-badge">Live product</span>
-          <h3>Spender</h3>
-          <p>
-            A clean, fast personal finance tracker for people who want clarity without
-            spreadsheets. Track spending, spot trends, and stay on budget — all in one
-            focused app.
-          </p>
-          <ul class="product-features">
-            <li>Real-time expense tracking</li>
-            <li>Smart categorization</li>
-            <li>Simple, distraction-free interface</li>
-          </ul>
-          <a href="https://spender.nextcite.app" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
-            Visit spender.nextcite.app <span aria-hidden="true">→</span>
-          </a>
+  <!-- ============ PRODUCTS ============ -->
+  <section id="products" class="scene section" data-scene="products">
+    <div class="layer depth-0" data-depth="0" aria-hidden="true"><div class="scene-aurora aurora-products"></div></div>
+    <div class="layer depth-1" data-depth="1" aria-hidden="true"><div class="scene-glow glow-products"></div></div>
+    <div class="layer depth-4">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">Products</span>
+          <h2>Software we build for ourselves — and for you</h2>
+          <p>Every Nextcite product is a proof point: real tools, built with the same AI-assisted
+            workflow we bring to client engagements.</p>
         </div>
-        <div class="product-visual" aria-hidden="true">
-          <div class="mock-window">
-            <div class="mock-bar"><span></span><span></span><span></span></div>
-            <div class="mock-body">
-              <div class="mock-line w-60"></div>
-              <div class="mock-line w-40"></div>
-              <div class="mock-chart">
-                <div class="mock-bar-item" style="--h:40%"></div>
-                <div class="mock-bar-item" style="--h:70%"></div>
-                <div class="mock-bar-item" style="--h:55%"></div>
-                <div class="mock-bar-item" style="--h:90%"></div>
-                <div class="mock-bar-item" style="--h:65%"></div>
-                <div class="mock-bar-item" style="--h:80%"></div>
+
+        <!-- Spender -->
+        <article class="product-card reveal">
+          <div class="product-info">
+            <span class="product-badge">Live product</span>
+            <h3>Spender</h3>
+            <p>
+              A clean, fast personal finance tracker for people who want clarity without
+              spreadsheets. Track spending, spot trends, and stay on budget — all in one
+              focused app.
+            </p>
+            <ul class="product-features">
+              <li>Real-time expense tracking</li>
+              <li>Smart categorization</li>
+              <li>Simple, distraction-free interface</li>
+            </ul>
+            <a href="https://spender.nextcite.app" target="_blank" rel="noopener" class="btn btn-primary btn-sm">
+              Visit spender.nextcite.app <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="product-visual" data-parallax="0.05" data-tilt aria-hidden="true">
+            <div class="mock-window mock-glow">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-body">
+                <div class="mock-line w-60"></div>
+                <div class="mock-line w-40"></div>
+                <div class="mock-chart">
+                  <div class="mock-bar-item" style="--h:40%"></div>
+                  <div class="mock-bar-item" style="--h:70%"></div>
+                  <div class="mock-bar-item" style="--h:55%"></div>
+                  <div class="mock-bar-item" style="--h:90%"></div>
+                  <div class="mock-bar-item" style="--h:65%"></div>
+                  <div class="mock-bar-item" style="--h:80%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- DynamicApp ERP -->
+        <article id="erp" class="product-card product-card-erp reveal">
+          <div class="product-visual" data-parallax="0.05" data-tilt aria-hidden="true">
+            <div class="mock-window mock-erp-window mock-glow">
+              <div class="mock-bar"><span></span><span></span><span></span></div>
+              <div class="mock-erp-body">
+                <div class="mock-sidebar">
+                  <div class="mock-sidebar-item"></div>
+                  <div class="mock-sidebar-item"></div>
+                  <div class="mock-sidebar-item"></div>
+                  <div class="mock-sidebar-item"></div>
+                  <div class="mock-sidebar-item"></div>
+                </div>
+                <div class="mock-dashboard">
+                  <div class="mock-dash-header">
+                    <div class="mock-line w-40"></div>
+                    <div class="mock-dash-actions"><span></span><span></span></div>
+                  </div>
+                  <div class="mock-dash-cards">
+                    <div class="mock-dash-card"></div>
+                    <div class="mock-dash-card"></div>
+                    <div class="mock-dash-card"></div>
+                  </div>
+                  <div class="mock-dash-table">
+                    <div class="mock-line w-100"></div>
+                    <div class="mock-line w-80"></div>
+                    <div class="mock-line w-90"></div>
+                    <div class="mock-line w-70"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="product-info">
+            <span class="product-badge product-badge-erp">Coming soon</span>
+            <h3>DynamicApp <span class="gradient-text">ERP</span></h3>
+            <p>
+              A modular, plugin-driven ERP platform for modern enterprises. DynamicApp brings
+              AI-powered automation, multi-tenant isolation, and an extensible plugin
+              architecture — so your business systems grow with you, not against you.
+            </p>
+            <ul class="product-features">
+              <li>Plugin-based modular architecture</li>
+              <li>Multi-tenant with data isolation by construction</li>
+              <li>AI-powered workflow automation</li>
+              <li>Semantic versioning with migration paths</li>
+            </ul>
+            <a href="#contact" class="btn btn-ghost btn-sm">
+              Get early access <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SERVICES ============ -->
+  <section id="services" class="scene section section-alt" data-scene="services">
+    <div class="layer depth-0" data-depth="0" aria-hidden="true"><div class="scene-aurora aurora-services"></div></div>
+    <div class="layer depth-1" data-depth="1" aria-hidden="true"><div class="scene-glow glow-services"></div></div>
+    <div class="layer depth-4">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">Services</span>
+          <h2>What we do</h2>
+          <p>From custom builds to modernization, we use AI-augmented engineering to move faster
+            without sacrificing craftsmanship.</p>
+        </div>
+        <div class="grid grid-3">
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">◆</div>
+            <h3>Custom Software Development</h3>
+            <p>Web apps, internal tools, and platforms designed around your workflow and built to scale.</p>
+          </div>
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">◇</div>
+            <h3>AI-Accelerated Engineering</h3>
+            <p>We use AI coding tools throughout the SDLC — from architecture to code review — to cut delivery time dramatically.</p>
+          </div>
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">▲</div>
+            <h3>Product Design &amp; UX</h3>
+            <p>Interfaces that feel modern and intuitive, backed by fast iteration cycles.</p>
+          </div>
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">●</div>
+            <h3>Cloud &amp; On-Prem Infrastructure</h3>
+            <p>CI/CD pipelines and automated deployments across cloud, on-premises, and hybrid environments — wherever your infrastructure lives.</p>
+          </div>
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">■</div>
+            <h3>Legacy Modernization</h3>
+            <p>Refactor and rebuild aging systems into maintainable, well-tested codebases.</p>
+          </div>
+          <div class="feature-card reveal" data-tilt>
+            <div class="feature-icon">✦</div>
+            <h3>IT Consulting</h3>
+            <p>Strategic guidance on tooling, architecture, and how to responsibly adopt AI in your stack.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section id="process" class="scene section process-scene" data-scene="process">
+    <div class="layer depth-0" data-depth="0" aria-hidden="true"><div class="scene-aurora aurora-process"></div></div>
+    <div class="layer depth-1" data-depth="1" aria-hidden="true"><div class="scene-glow glow-process"></div></div>
+    <div class="layer depth-4">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">Process</span>
+          <h2>How we ship</h2>
+          <p>A tight loop of human judgment and AI speed.</p>
+        </div>
+        <div class="process-wrap">
+          <div class="process-line" aria-hidden="true"><span id="process-fill"></span></div>
+          <div class="process-list">
+            <div class="process-step reveal">
+              <div class="process-num">01</div>
+              <div>
+                <h3>Discover &amp; scope</h3>
+                <p>We map your problem, constraints, and success metrics before writing a line of code.</p>
+              </div>
+            </div>
+            <div class="process-step reveal">
+              <div class="process-num">02</div>
+              <div>
+                <h3>Design with AI, guided by engineers</h3>
+                <p>AI coding tools generate and iterate on solutions at speed; senior engineers direct, review, and refine every decision.</p>
+              </div>
+            </div>
+            <div class="process-step reveal">
+              <div class="process-num">03</div>
+              <div>
+                <h3>Ship continuously</h3>
+                <p>Automated pipelines test and deploy changes constantly, so you see progress in days, not months.</p>
+              </div>
+            </div>
+            <div class="process-step reveal">
+              <div class="process-num">04</div>
+              <div>
+                <h3>Support &amp; iterate</h3>
+                <p>We stay close post-launch — monitoring, improving, and evolving the product with you.</p>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- DynamicApp ERP -->
-      <div id="erp" class="product-card product-card-erp reveal">
-        <div class="product-visual" aria-hidden="true">
-          <div class="mock-window mock-erp-window">
-            <div class="mock-bar"><span></span><span></span><span></span></div>
-            <div class="mock-erp-body">
-              <div class="mock-sidebar">
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-                <div class="mock-sidebar-item"></div>
-              </div>
-              <div class="mock-dashboard">
-                <div class="mock-dash-header">
-                  <div class="mock-line w-40"></div>
-                  <div class="mock-dash-actions"><span></span><span></span></div>
-                </div>
-                <div class="mock-dash-cards">
-                  <div class="mock-dash-card"></div>
-                  <div class="mock-dash-card"></div>
-                  <div class="mock-dash-card"></div>
-                </div>
-                <div class="mock-dash-table">
-                  <div class="mock-line w-100"></div>
-                  <div class="mock-line w-80"></div>
-                  <div class="mock-line w-90"></div>
-                  <div class="mock-line w-70"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="product-info">
-          <span class="product-badge product-badge-erp">Coming soon</span>
-          <h3>DynamicApp <span class="gradient-text">ERP</span></h3>
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="scene section section-alt about-section" data-scene="about">
+    <div class="layer depth-0" data-depth="0" aria-hidden="true"><div class="scene-aurora aurora-about"></div></div>
+    <div class="layer depth-1" data-depth="1" aria-hidden="true"><div class="scene-glow glow-about"></div></div>
+    <div class="layer depth-4">
+      <div class="container about-inner">
+        <div class="reveal">
+          <span class="section-tag">About Nextcite</span>
+          <h2 class="line-mask"><span class="line-inner">Human expertise. AI-native speed.</span></h2>
           <p>
-            A modular, plugin-driven ERP platform for modern enterprises. DynamicApp brings
-            AI-powered automation, multi-tenant isolation, and an extensible plugin
-            architecture — so your business systems grow with you, not against you.
+            Nextcite is an IT solutions company built for the way software gets made today.
+            We believe AI coding tools are a force multiplier for good engineers — not a
+            replacement for judgment, taste, or accountability. Every solution we ship is
+            designed, reviewed, and owned by our team.
           </p>
-          <ul class="product-features">
-            <li>Plugin-based modular architecture</li>
-            <li>Multi-tenant with data isolation by construction</li>
-            <li>AI-powered workflow automation</li>
-            <li>Semantic versioning with migration paths</li>
-          </ul>
-          <a href="#contact" class="btn btn-ghost btn-sm">
-            Get early access <span aria-hidden="true">→</span>
-          </a>
+          <p>
+            Our flagship product, DynamicApp, is a plugin-driven ERP platform that embodies
+            this philosophy — built with AI acceleration, architected for enterprise
+            isolation, and designed to evolve through a stable plugin contract rather than
+            costly rewrites.
+          </p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SERVICES -->
-  <section id="services" class="section section-alt">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-tag">Services</span>
-        <h2>What we do</h2>
-        <p>From custom builds to modernization, we use AI-augmented engineering to move faster
-          without sacrificing craftsmanship.</p>
-      </div>
-      <div class="grid grid-3">
-        <div class="feature-card reveal">
-          <div class="feature-icon">◆</div>
-          <h3>Custom Software Development</h3>
-          <p>Web apps, internal tools, and platforms designed around your workflow and built to scale.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">◇</div>
-          <h3>AI-Accelerated Engineering</h3>
-          <p>We use AI coding tools throughout the SDLC — from architecture to code review — to cut delivery time dramatically.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">▲</div>
-          <h3>Product Design & UX</h3>
-          <p>Interfaces that feel modern and intuitive, backed by fast iteration cycles.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">●</div>
-          <h3>Cloud & On-Prem Infrastructure</h3>
-          <p>CI/CD pipelines and automated deployments across cloud, on-premises, and hybrid environments — wherever your infrastructure lives.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">■</div>
-          <h3>Legacy Modernization</h3>
-          <p>Refactor and rebuild aging systems into maintainable, well-tested codebases.</p>
-        </div>
-        <div class="feature-card reveal">
-          <div class="feature-icon">✦</div>
-          <h3>IT Consulting</h3>
-          <p>Strategic guidance on tooling, architecture, and how to responsibly adopt AI in your stack.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section id="process" class="section">
-    <div class="container">
-      <div class="section-head reveal">
-        <span class="section-tag">Process</span>
-        <h2>How we ship</h2>
-        <p>A tight loop of human judgment and AI speed.</p>
-      </div>
-      <div class="process-list">
-        <div class="process-step reveal">
-          <div class="process-num">01</div>
-          <div>
-            <h3>Discover & scope</h3>
-            <p>We map your problem, constraints, and success metrics before writing a line of code.</p>
+        <div class="about-values reveal">
+          <div class="value-item">
+            <h4>Speed</h4>
+            <p>AI-assisted workflows compress timelines from months to weeks.</p>
           </div>
-        </div>
-        <div class="process-step reveal">
-          <div class="process-num">02</div>
-          <div>
-            <h3>Design with AI, guided by engineers</h3>
-            <p>AI coding tools generate and iterate on solutions at speed; senior engineers direct, review, and refine every decision.</p>
+          <div class="value-item">
+            <h4>Craftsmanship</h4>
+            <p>Every line of AI-generated code is reviewed by an engineer who owns it.</p>
           </div>
-        </div>
-        <div class="process-step reveal">
-          <div class="process-num">03</div>
-          <div>
-            <h3>Ship continuously</h3>
-            <p>Automated pipelines test and deploy changes constantly, so you see progress in days, not months.</p>
-          </div>
-        </div>
-        <div class="process-step reveal">
-          <div class="process-num">04</div>
-          <div>
-            <h3>Support & iterate</h3>
-            <p>We stay close post-launch — monitoring, improving, and evolving the product with you.</p>
+          <div class="value-item">
+            <h4>Transparency</h4>
+            <p>Clear scope, clear communication, no black boxes.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about" class="section section-alt about-section">
-    <div class="container about-inner">
-      <div class="reveal">
-        <span class="section-tag">About Nextcite</span>
-        <h2>Human expertise. AI-native speed.</h2>
-        <p>
-          Nextcite is an IT solutions company built for the way software gets made today.
-          We believe AI coding tools are a force multiplier for good engineers — not a
-          replacement for judgment, taste, or accountability. Every solution we ship is
-          designed, reviewed, and owned by our team.
-        </p>
-        <p>
-          Our flagship product, DynamicApp, is a plugin-driven ERP platform that embodies
-          this philosophy — built with AI acceleration, architected for enterprise
-          isolation, and designed to evolve through a stable plugin contract rather than
-          costly rewrites.
-        </p>
-      </div>
-      <div class="about-values reveal">
-        <div class="value-item">
-          <h4>Speed</h4>
-          <p>AI-assisted workflows compress timelines from months to weeks.</p>
-        </div>
-        <div class="value-item">
-          <h4>Craftsmanship</h4>
-          <p>Every line of AI-generated code is reviewed by an engineer who owns it.</p>
-        </div>
-        <div class="value-item">
-          <h4>Transparency</h4>
-          <p>Clear scope, clear communication, no black boxes.</p>
+  <!-- ============ CTA / CONTACT ============ -->
+  <section id="contact" class="scene section cta-section" data-scene="cta">
+    <div class="layer depth-0" data-depth="0" aria-hidden="true"><div class="scene-aurora aurora-cta"></div></div>
+    <div class="layer depth-1" data-depth="1" aria-hidden="true"><div class="scene-glow glow-cta"></div></div>
+    <div class="layer depth-4">
+      <div class="container">
+        <div class="cta-inner reveal" id="cta-panel">
+          <h2>Have a project in mind?</h2>
+          <p>Tell us what you're building. We'll show you how AI-accelerated engineering gets it done faster.</p>
+          <a href="mailto:support@nextcite.app" class="btn btn-primary btn-lg">Email support@nextcite.app</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- CTA / CONTACT -->
-  <section id="contact" class="section cta-section">
-    <div class="container cta-inner reveal">
-      <h2>Have a project in mind?</h2>
-      <p>Tell us what you're building. We'll show you how AI-accelerated engineering gets it done faster.</p>
-      <a href="mailto:support@nextcite.app" class="btn btn-primary btn-lg">Email support@nextcite.app</a>
     </div>
   </section>
 
@@ -342,6 +469,6 @@
   </div>
 </footer>
 
-<script src="js/script.js"></script>
+<script defer src="js/script.js"></script>
 </body>
 </html>
